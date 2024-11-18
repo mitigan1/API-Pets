@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.6.7/dist/axios.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pets</title>
+    <script type="module">
+    const pets = await axios.get('http://localhost:3000/api/pets/')
+    console.log(pets.data)
+    const container = document.querySelector('#pets-list')
+    for (const pet of pets.data) {
+        container.innerHTML += `
+            <tr>
+                <td>${pet.nome}</td>
+                <td>
+                    <a href="form.html?id=${pet._id}">editar</a>
+                    <a href="javascript:deletar('${pet._id}');">deletar</a>
+                </td>
+            </tr>
+        `
+    }
+    window.deletar = async function deletar(id){
+        try {
+            await axios.delete('http://localhost:3000/api/pets/' + id)
+            alert('deletado')
+            location.reload()
+        } catch (error) {
+            alert('algo deu errado')
+            console.error(error)
+        }
+    }
+    </script>
+</head>
+<body>
+    <table>
+        <thead>
+            <tr>
+                <th>
+                    nome
+                </th>
+            </tr>
+        </thead>
+        <tbody id="pets-list"></tbody>
+    </table>
+    
+</body>
+</html>
